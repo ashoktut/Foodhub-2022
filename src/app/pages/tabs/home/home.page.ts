@@ -25,6 +25,7 @@ export class HomePage implements OnInit {
         {
           cover: 'assets/imgs/1.jpg',
           name: 'StayFit',
+          shortName: 'stayfit',
           cuisines: [ //cusines array
             'Italian',
             'Mexican'
@@ -38,6 +39,7 @@ export class HomePage implements OnInit {
         {
           cover: 'assets/imgs/2.jpg',
           name: 'StayFit1',
+          shortName: 'stayfit1',
           cuisines: [ //cusines array
             'Italian',
             'Mexican'
@@ -51,6 +53,7 @@ export class HomePage implements OnInit {
         {
           cover: 'assets/imgs/3.jpg',
           name: 'StayFit2',
+          shortName: 'stayfit3',
           cuisines: [ //cusines array
             'Italian',
             'Mexican'
