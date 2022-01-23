@@ -21,6 +21,7 @@ export class SearchPage implements OnInit {
   query: any;
   allRestaurants: any[] = [ //restaurant object and its attributes
     {
+      uid: 'sdu8fdf',
       cover: 'assets/imgs/1.jpg',
       name: 'StayFit',
       shortName: 'stayfit',
@@ -35,6 +36,7 @@ export class SearchPage implements OnInit {
     },
 
     {
+      uid: 'jfl8f',
       cover: 'assets/imgs/2.jpg',
       name: 'StayFit1',
       shortName: 'stayfit1',
@@ -49,10 +51,11 @@ export class SearchPage implements OnInit {
     },
 
     {
+      uid: 'nwefvi',
       cover: 'assets/imgs/3.jpg',
       name: 'StayFit2',
       shortName: 'stayfit3',
-      cuisines: [ //cuisines array
+      cuisines: [ //cusines array
         'Italian',
         'Mexican'
       ],

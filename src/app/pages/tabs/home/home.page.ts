@@ -23,6 +23,7 @@ export class HomePage implements OnInit {
       ];
       this.restaurants = [ //restaurant object and its attributes
         {
+          uid: 'sdu8fdf',
           cover: 'assets/imgs/1.jpg',
           name: 'StayFit',
           shortName: 'stayfit',
@@ -37,6 +38,7 @@ export class HomePage implements OnInit {
         },
 
         {
+          uid: 'jfl8f',
           cover: 'assets/imgs/2.jpg',
           name: 'StayFit1',
           shortName: 'stayfit1',
@@ -51,6 +53,7 @@ export class HomePage implements OnInit {
         },
 
         {
+          uid: 'nwefvi',
           cover: 'assets/imgs/3.jpg',
           name: 'StayFit2',
           shortName: 'stayfit3',
