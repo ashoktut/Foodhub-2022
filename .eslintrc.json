@@ -6,6 +6,7 @@
       "files": ["*.ts"],
       "parserOptions": {
         "project": ["FoodHub/tsconfig.json", "e2e/tsconfig.json"],
+        "tsconfigRootDir": "__FoodHub",
         "createDefaultProgram": true
       },
       "extends": [
