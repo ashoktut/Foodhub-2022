@@ -8,6 +8,9 @@
 </ion-header>
 
 <ion-content>
+
+  <app-empty-screen *ngIf="!model?.restaurant"></app-empty-screen>
+
   <ng-container *ngIf="model?.restaurant">
     <ion-list lines="none" class="borderBottomSmall">
       <ion-item>
@@ -20,26 +23,13 @@
         </ion-label>
       </ion-item>
 
-      <ion-item *ngFor="let item of model?.items; let i = index">
-        <ion-text color="success">
-          <span class="dotStyle">&#9679;</span>
-        </ion-text>
-
-        <ion-label class="ion-text-wrap">
-          <h5>{{item?.name}}</h5>
-        </ion-label>
-
-        <ion-row>
-          <ion-icon color="dark" name="remove-outline" (click)="quantityMinus(i)"></ion-icon>
-          <ion-text class="ion-text-center quantity" color="dark">{{item?.quantity}}</ion-text>
-          <ion-icon color="success" name="add-outline" (click)="quantityPlus(i)"></ion-icon>
-        </ion-row>
-
-        <ion-text slot="end" color="dark" class="price ion-text-right">
-          <!-- <h6>R {{item?.price * item?.quantity}}</h6> -->
-          R {{(item?.price * item?.quantity) | number: '0.2-2'}}
-        </ion-text>
-      </ion-item>
+      <app-cart-item
+        *ngFor="let item of model?.items; let i = index"
+        [item]="item"
+        [index]="i"
+        (add)="quantityPlus($event)"
+        (minus)="quantityMinus($event)">
+      </app-cart-item>
     </ion-list>
 
     <ion-item lines="none" class="borderBottom">
