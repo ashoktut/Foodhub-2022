@@ -33,7 +33,7 @@ ion-label, h4 {
   font-weight: bold !important;
 }
 
-ion-note, p {
+.pTag, ion-note, p {
   font-size: 0.8rem;
 }
 
@@ -46,9 +46,14 @@ h6 {
 }
 
 .borderBottom {
-  border-bottom: 1vh solid var(--ion-color-light);
+  border-bottom: 1.5vh solid var(--ion-color-light);
 }
 
 .borderBottomSmall {
   border-bottom: 0.1rem solid var(--ion-color-light);
 }
+
+.dashedBorderBottom{
+  border-bottom: 1px dashed var(--ion-color-medium);
+}
+
