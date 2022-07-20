@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { GlobalService } from 'src/app/services/global/global.service';
+import { duration } from 'moment';
 
 @Component({
   selector: 'app-address',
@@ -10,7 +12,7 @@ export class AddressPage implements OnInit {
   isLoading: boolean;
   addresses: any[] = [];
 
-  constructor() { }
+  constructor(private global: GlobalService) { }
 
   ngOnInit() {
     this.getAddresses();
@@ -18,6 +20,7 @@ export class AddressPage implements OnInit {
 
   getAddresses() {
     this.isLoading = true;
+    //this.global.showLoader();
     setTimeout(()=> {
       this.addresses = [
         {address: "Oriental Plaza, Fordsburg", house:"29 Zeet Street", id: "7f8sfe", landmark: "OP", lat: 26.1830738, lng: 91.7404976999999, title: "Home", user_id: "1"},
@@ -25,16 +28,12 @@ export class AddressPage implements OnInit {
         {address: "Sun City, Rustenburg", house:"72 Corlett Drive", id: "37hb5bg", landmark: "Resort", lat: 37.3734575, lng: 15.74326784, title: "Other", user_id: "1"},
       ];
       this.isLoading = false;
+      //this.global.setLoader();
     }, 3000);
   }
 
   getIcon(title) {
-    const name = title.toLowerCase();
-    switch (name) {
-      case 'home': return 'home-outline';
-      case 'work': return 'briefcase-outline';
-      default: return 'location-outline';
-    }
+    return this.global.getIcon(title);
   }
 
   editAddress(address) {
