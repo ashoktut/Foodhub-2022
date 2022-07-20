@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { element } from 'protractor';
+import { ApiService } from 'src/app/services/api/api.service';
 
 @Component({
   selector: 'app-search',
@@ -19,59 +20,14 @@ export class SearchPage implements OnInit {
 
   isLoading: boolean;
   query: any;
-  allRestaurants: any[] = [ //restaurant object and its attributes
-    {
-      uid: 'sdu8fdf',
-      cover: 'assets/imgs/1.jpg',
-      name: 'StayFit',
-      shortName: 'stayfit',
-      cuisines: [ //cusines array
-        'Italian',
-        'Mexican'
-      ],
-      rating: 5,
-      deliveryTime: 25,
-      // distance: 2.5,
-      price: 100
-    },
-
-    {
-      uid: 'jfl8f',
-      cover: 'assets/imgs/2.jpg',
-      name: 'StayFit1',
-      shortName: 'stayfit1',
-      cuisines: [ //cusines array
-        'Italian',
-        'Mexican'
-      ],
-      rating: 5,
-      deliveryTime: 25,
-      // distance: 2.5,
-      price: 100
-    },
-
-    {
-      uid: 'nwefvi',
-      cover: 'assets/imgs/3.jpg',
-      name: 'StayFit2',
-      shortName: 'stayfit3',
-      cuisines: [ //cusines array
-        'Italian',
-        'Mexican'
-      ],
-      rating: 5,
-      deliveryTime: 25,
-      // distance: 2.5,
-      price: 100
-    },
-  ];
-
+  allRestaurants: any[] = [];
   restaurants: any[] = [];
 
-  constructor() { }
+  constructor(private api: ApiService) { }
 
   ngOnInit() {
     setTimeout(() => {
+      this.allRestaurants = this.api.allRestaurants;
       this.sInput.setFocus();
     }, 500);
   }
