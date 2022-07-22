@@ -1,34 +1,55 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GlobalService } from 'src/app/services/global/global.service';
 import { duration } from 'moment';
+import { AddressService } from '../../../services/address/address.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-address',
   templateUrl: './address.page.html',
   styleUrls: ['./address.page.scss'],
 })
-export class AddressPage implements OnInit {
-
+export class AddressPage implements OnInit, OnDestroy {
   isLoading: boolean;
   addresses: any[] = [];
+  addressesSub: Subscription;
+  model: any = {
+    title: 'No Addresses Added Yet',
+    icon: 'location-outline'
+  }
 
-  constructor(private global: GlobalService) { }
+  constructor(
+    private global: GlobalService,
+    private addressService: AddressService
+  ) {}
 
   ngOnInit() {
+    this.addressesSub = this.addressService.addresses.subscribe((address) => {
+      console.log('addresses:', address);
+      if(address instanceof Array) {
+        this.addresses = address;
+      } else {
+        if(address?.delete) {
+          this.addresses = this.addresses.filter(x => x.id != address.id);
+        } else if(address?.update) {
+          const index = this.addresses.findIndex(x => x.id == address.id);
+          this.addresses[index] = address;
+        } else {
+          this.addresses = this.addresses.concat(address);
+        }
+      }
+    });
     this.getAddresses();
   }
 
-  getAddresses() {
+  async getAddresses() {
     this.isLoading = true;
-    //this.global.showLoader();
-    setTimeout(()=> {
-      this.addresses = [
-        {address: "Oriental Plaza, Fordsburg", house:"29 Zeet Street", id: "7f8sfe", landmark: "OP", lat: 26.1830738, lng: 91.7404976999999, title: "Home", user_id: "1"},
-        {address: "Golf Course, Woodmead", house:"92 Benz Street", id: "546n4bbf", landmark: "Corner", lat: 22.1073837, lng: 86.740497326, title: "Work", user_id: "1"},
-        {address: "Sun City, Rustenburg", house:"72 Corlett Drive", id: "37hb5bg", landmark: "Resort", lat: 37.3734575, lng: 15.74326784, title: "Other", user_id: "1"},
-      ];
+    this.global.showLoader();
+    setTimeout(async () => {
+      await this.addressService.getAddresses();
+
       this.isLoading = false;
-      //this.global.setLoader();
+      this.global.hideLoader();
     }, 3000);
   }
 
@@ -36,12 +57,35 @@ export class AddressPage implements OnInit {
     return this.global.getIcon(title);
   }
 
-  editAddress(address) {
-
-  }
+  editAddress(address) {}
 
   deleteAddress(address) {
-
+    console.log('address: ', address);
+    this.global.showAlert(
+      'Are you sure you want to delete this address?',
+      'Confirm',
+      [
+        {
+          text: 'No',
+          role: 'cancel',
+          handler: () => {
+            console.log('cancel');
+            return;
+          }
+        },
+        {
+          text: 'Yes',
+          handler: async () => {
+            this.global.showLoader();
+            await this.addressService.deleteAddress(address);
+            this.global.hideLoader();
+          }
+        }
+      ]
+    )
   }
 
+  ngOnDestroy() {
+    if(this.addressesSub) this.addressesSub.unsubscribe();
+  }
 }
