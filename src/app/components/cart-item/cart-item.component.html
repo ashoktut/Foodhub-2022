@@ -7,7 +7,7 @@
     <h5>{{item?.name}}</h5>
   </ion-label>
 
-  <ion-row>
+  <ion-row class="ion-margin-end">
     <ion-icon color="dark" name="remove-outline" (click)="quantityMinus()"></ion-icon>
     <ion-text class="ion-text-center quantity" color="dark">{{item?.quantity}}</ion-text>
     <ion-icon color="success" name="add-outline" (click)="quantityPlus()"></ion-icon>
