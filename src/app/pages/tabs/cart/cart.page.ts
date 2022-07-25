@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { Storage } from "@capacitor/storage";
 import { IonContent, NavController } from '@ionic/angular';
 import * as moment from 'moment';
+import { Subscription } from 'rxjs';
+import { CartService } from 'src/app/services/cart/cart.service';
 import { GlobalService } from 'src/app/services/global/global.service';
 import { OrderService } from 'src/app/services/order/order.service';
 
@@ -20,60 +22,32 @@ export class CartPage implements OnInit {
   deliveryCharge = 20;
   instruction: any;
   location: any = {};
+  cartSub: Subscription;
 
   constructor(
     private navCtrl: NavController,
     private router: Router,
     private orderService: OrderService,
-    private global: GlobalService
+    private global: GlobalService,
+    private cartService: CartService
   ) { }
 
   ngOnInit() {
+    this.cartSub = this.cartService.cart.subscribe(cart => {
+      this.model = cart;
+      if(!this.model) this.location = {};
+    })
     this.checkUrl();
-    this.getModel();
+    this.getData();
   }
 
-  getCart() {
-    return Storage.get({key: 'cart'});
-  }
-
-  async getModel() {
-    let data: any = await this.getCart();
+  async getData() {
     this.location = {
       lat: 28.653831,
       lng: 77.188257,
       address: 'Karol Bagh, New Delhi'
     };
-    if(data?.value) {
-      this.model = await JSON.parse(data.value);
-      console.log(this.model);
-      this.calculate();
-    }
-  }
-
-  async calculate() {
-    let item = this.model.items.filter(x => x.quantity > 0);
-    this.model.items = item;
-    this.model.totalPrice = 0;
-    this.model.totalItem = 0;
-    this.model.deliveryCharge = 20;
-    this.model.grandTotal = 0;
-
-    item.forEach(element => {
-      this.model.totalItem += element.quantity;
-      this.model.totalPrice += (parseFloat(element.price) * parseFloat(element.quantity));
-    });
-    this.model.deliveryCharge = parseFloat(this.model.deliveryCharge).toFixed(2);
-    this.model.totalPrice = parseFloat(this.model.totalPrice).toFixed(2);
-    this.model.grandTotal = (parseFloat(this.model.totalPrice) + parseFloat(this.model.deliveryCharge)).toFixed(2);
-    if(this.model.totalItem == 0) {
-      this.model.totalItem = 0;
-      this.model.totalPrice = 0;
-      this.model.grandTotal = 0;
-      await this.clearCart();
-      this.model = null;
-    }
-    console.log('cart: ', this.model);
+    await this.cartService.getCartData();
   }
 
 clearCart() {
@@ -97,27 +71,11 @@ clearCart() {
   }
 
   quantityPlus(index) {
-    try {
-      console.log(this.model.items[index]);
-      if (!this.model.items[index].quantity || this.model.items[index].quantity === 0) {
-        this.model.items[index].quantity = 1;
-        this.calculate();
-      } else {
-        this.model.items[index].quantity += 1;
-        this.calculate();
-      }
-    } catch (e) {
-      console.log(e);
-    }
+    this.cartService.quantityPlus(index);
   }
 
   quantityMinus(index) {
-    if(this.model.items[index].quantity !== 0) {
-      this.model.items[index].quantity -= 1;
-    } else {
-      this.model.items[index].quantity = 0;
-    }
-    this.calculate();
+    this.cartService.quantityMinus(index);
   }
 
   addAddress() {
@@ -146,7 +104,7 @@ clearCart() {
       // place order
       await this.orderService.placeOrder(data);
       // clear cart
-      await this.clearCart();
+      await this.cartService.clearCart();
       this.global.successToast('Your Order is Placed Successfully!', 1000);
       this.navCtrl.navigateRoot(['tabs/account'])
     } catch (e) {
